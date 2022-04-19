@@ -16,6 +16,7 @@
 
 		Returns the value configured for the "VaultName" setting
 	#>
+	[Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSAvoidGlobalVars', '')]
 	[CmdletBinding()]
 	param (
 		[Parameter(Mandatory = $true)]

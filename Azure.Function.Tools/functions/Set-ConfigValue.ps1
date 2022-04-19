@@ -18,6 +18,8 @@
 	
 		Set the config setting "VaultName" to the value "myVault"
 	#>
+	[Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSAvoidGlobalVars', '')]
+	[Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSUseShouldProcessForStateChangingFunctions', '')]
 	[CmdletBinding()]
 	param (
 		[Parameter(Mandatory = $true, Position = 0)]

@@ -18,6 +18,7 @@
 
 		Loads the config.psd1 file from the folder of the calling file's.
 	#>
+	[Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSAvoidGlobalVars', '')]
 	[CmdletBinding()]
 	param (
 		[Parameter(Mandatory = $true)]

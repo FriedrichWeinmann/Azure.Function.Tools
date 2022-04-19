@@ -30,6 +30,7 @@
 		
 		Retrieves the credentials stored in the myCred secret within the configured default Key Vault.
 	#>
+	[Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSAvoidUsingConvertToSecureStringWithPlainText', '')]
 	[OutputType([PSCredential])]
 	[CmdletBinding()]
 	param (
