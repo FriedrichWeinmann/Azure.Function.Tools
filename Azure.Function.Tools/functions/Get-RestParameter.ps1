@@ -37,11 +37,11 @@
 			Body  = $Request.Body
 		}
 		if ($newRequest.Body -and $newRequest.Body -is [string]) {
-			try { $newRequest.Body = $newRequest.Body | ConvertFrom-Json -ErrorAction Stop }
+			try { $newRequest.Body = $newRequest.Body | ConvertFrom-Json -AsHashtable -ErrorAction Stop }
 			catch { }
 		}
 		if ($newRequest.Query -and $newRequest.Query -is [string]) {
-			try { $newRequest.Query = $newRequest.Query | ConvertFrom-Json -ErrorAction Stop }
+			try { $newRequest.Query = $newRequest.Query | ConvertFrom-Json -AsHashtable -ErrorAction Stop }
 			catch { }
 		}
 	}
