@@ -19,6 +19,7 @@
 
 		Retrieves all parameters on the incoming request that match a parameter on Get-AzUser
 	#>
+	[Diagnostics.CodeAnalysis.SuppressMessageAttribute("PSAvoidUsingEmptyCatchBlock", "")]
 	[OutputType([hashtable])]
 	[CmdletBinding()]
 	Param (
