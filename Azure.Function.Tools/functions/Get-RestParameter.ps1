@@ -19,6 +19,7 @@
 
 		Retrieves all parameters on the incoming request that match a parameter on Get-AzUser
 	#>
+	[Diagnostics.CodeAnalysis.SuppressMessageAttribute("PSAvoidUsingEmptyCatchBlock", "")]
 	[OutputType([hashtable])]
 	[CmdletBinding()]
 	Param (
@@ -30,11 +31,27 @@
 		$Command
 	)
 
-	$commandInfo = Get-Command -Name $Command
-	$results = @{ }
-	foreach ($parameter in $commandInfo.Parameters.Keys) {
-		$value = Get-RestParameterValue -Request $Request -Name $parameter
-		if ($null -ne $value) { $results[$parameter] = $value }
+	begin {
+		$newRequest = [PSCustomObject]@{
+			Query = $Request.Query
+			Body  = $Request.Body
+		}
+		if ($newRequest.Body -and $newRequest.Body -is [string]) {
+			try { $newRequest.Body = $newRequest.Body | ConvertFrom-Json -ErrorAction Stop }
+			catch { }
+		}
+		if ($newRequest.Query -and $newRequest.Query -is [string]) {
+			try { $newRequest.Query = $newRequest.Query | ConvertFrom-Json -ErrorAction Stop }
+			catch { }
+		}
 	}
-	$results
+	process {
+		$commandInfo = Get-Command -Name $Command
+		$results = @{ }
+		foreach ($parameter in $commandInfo.Parameters.Keys) {
+			$value = Get-RestParameterValue -Request $newRequest -Name $parameter
+			if ($null -ne $value) { $results[$parameter] = $value }
+		}
+		$results
+	}
 }
