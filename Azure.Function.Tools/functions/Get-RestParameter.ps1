@@ -37,12 +37,34 @@
 			Body  = $Request.Body
 		}
 		if ($newRequest.Body -and $newRequest.Body -is [string]) {
+			# Try json conversion
 			try { $newRequest.Body = $newRequest.Body | ConvertFrom-Json -AsHashtable -ErrorAction Stop }
-			catch { }
+			catch {
+				# Try HTML decoding
+				try {
+					$data = @{ }
+					$newRequest.Body -split "&" | ForEach-Object { [System.Web.HttpUtility]::UrlDecode($_) } | ConvertFrom-StringData -ErrorAction Stop | ForEach-Object {
+						$data += $_
+					}
+					$newRequest.Body = $data
+				}
+				catch { }
+			}
 		}
 		if ($newRequest.Query -and $newRequest.Query -is [string]) {
+			# Try Json conversion
 			try { $newRequest.Query = $newRequest.Query | ConvertFrom-Json -AsHashtable -ErrorAction Stop }
-			catch { }
+			catch {
+				# Try HTML decoding
+				try {
+					$data = @{ }
+					$newRequest.Query -split "&" | ForEach-Object { [System.Web.HttpUtility]::UrlDecode($_) } | ConvertFrom-StringData -ErrorAction Stop | ForEach-Object {
+						$data += $_
+					}
+					$newRequest.Query = $data
+				}
+				catch { }
+			}
 		}
 	}
 	process {
