@@ -6,6 +6,7 @@
 	.DESCRIPTION
 		Returns a configured value.
 		Use Import-Config to define configuration values.
+		Supports reading from environment variables, when both are specified, configuration wins.
 		Will write warnings if no data found.
 	
 	.PARAMETER Name
@@ -24,14 +25,21 @@
 		$Name
 	)
 
-	if (-not $Global:config) {
+	$hasEnvironmentValue = Test-Path -Path "env:$Name"
+	
+	if (-not $Global:config -and -not $hasEnvironmentValue) {
 		Write-Warning "[Get-ConfigValue] No configuration defined yet."
 		return
 	}
 
-	if ($Global:config.Keys -notcontains $Name) {
+	if ($Global:config.Keys -notcontains $Name -and -not $hasEnvironmentValue) {
 		Write-Warning "[Get-ConfigValue] Configuration entry not found: $Name"
 		return
 	}
-	$Global:config.$Name
+	if ($Global:config.Keys -contains $Name) {
+		$Global:config.$Name
+	}
+	else {
+		(Get-Item -Path "env:$Name").Value
+	}
 }
